@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101018">
+<title>seeyuh — discover music</title>
+<style>
+:root{--bg:#101018;--panel:#1b1b27;--muted:#a6a6b7;--text:#f7f7fb;--accent:#b8ff4d;--purple:#8d6bff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0%,#33205b 0,transparent 32%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:24px 18px 14px;position:sticky;top:0;background:#101018eF;backdrop-filter:blur(12px);z-index:5;border-bottom:1px solid #ffffff10}
+.brand{font-size:28px;font-weight:900;letter-spacing:-1.5px}.brand span{color:var(--accent)}.tagline{color:var(--muted);font-size:13px;margin-top:1px}
+main{max-width:900px;margin:auto;padding:18px}.hero{padding:25px 20px;border-radius:24px;background:linear-gradient(130deg,#31205c,#1d2740 60%,#263b24);border:1px solid #ffffff16;margin-bottom:24px}
+.eyebrow{font-size:11px;letter-spacing:2px;color:var(--accent);font-weight:800}.hero h1{font-size:clamp(30px,7vw,47px);line-height:1.02;letter-spacing:-1.7px;margin:10px 0}.hero p{color:#d4d2e5;max-width:480px;margin:0 0 18px}
+.search{width:100%;padding:14px 16px;border-radius:14px;border:1px solid #ffffff1a;background:#1a1a26;color:white;font:inherit;outline:none}.search:focus{border-color:var(--accent)}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:22px 0 12px}.section-head h2{margin:0;font-size:21px;letter-spacing:-.5px}.section-head small{color:var(--muted)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}.chip{white-space:nowrap;border:1px solid #ffffff1a;background:#1b1b27;color:#ddd;padding:9px 14px;border-radius:999px;font:inherit;cursor:pointer}.chip.active{background:var(--accent);border-color:var(--accent);color:#131313;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.artist{background:var(--panel);border:1px solid #ffffff10;border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .15s}.artist:active{transform:scale(.98)}
+.art{height:108px;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900;letter-spacing:-2px;position:relative;overflow:hidden}.art:after{content:"";position:absolute;width:125px;height:125px;border:1px solid #ffffff30;border-radius:50%;right:-20px;top:35px}.art b{z-index:1;text-shadow:0 5px 25px #0005}.artist-info{padding:12px}.artist-info h3{margin:0;font-size:16px}.artist-info p{margin:3px 0 8px;color:var(--muted);font-size:12px}.genre-tag{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:800}
+.empty{padding:25px;text-align:center;color:var(--muted);grid-column:1/-1}.detail{display:none;margin-top:18px;padding:20px;background:var(--panel);border-radius:20px;border:1px solid #ffffff14}.detail.open{display:block}.detail-top{display:flex;gap:15px;align-items:center}.detail-art{width:88px;height:88px;border-radius:16px;display:grid;place-items:center;font-size:30px;font-weight:900;flex-shrink:0}.detail h2{margin:0;font-size:24px}.detail p{color:#d1d0dc}.detail .back{border:0;background:#30303e;color:white;padding:8px 12px;border-radius:10px;cursor:pointer}.track{background:#11111a;padding:10px 12px;border-radius:10px;margin:7px 0}
+.quiz{margin-top:25px;background:#20202c;padding:19px;border-radius:20px;border:1px solid #ffffff12}.quiz h2{margin:0 0 5px}.quiz p{color:var(--muted);margin:0 0 14px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:8px}.answer{padding:11px;border:1px solid #ffffff1a;background:#15151f;color:white;border-radius:12px;text-align:left;cursor:pointer}.answer:hover{border-color:var(--accent)}#quizFeedback{min-height:24px;color:var(--accent);margin-top:10px;font-weight:700}
+footer{text-align:center;padding:30px 15px;color:#77778a;font-size:12px}
+@media(min-width:620px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.art{height:135px}main{padding:24px}.hero{padding:34px}}
+</style>
+</head>
+<body>
+<header><div class="brand">see<span>yuh</span> ♪</div><div class="tagline">Your next favourite artist is waiting.</div></header>
+<main>
+<section class="hero"><div class="eyebrow">LISTEN WIDER</div><h1>Find your<br>next sound.</h1><p>Explore artists across genres, discover their signature sound, and test your music knowledge.</p><input class="search" id="search" placeholder="Search artists or genres…" aria-label="Search artists or genres"></section>
+<div class="section-head"><h2>Browse genres</h2><small id="count">12 artists</small></div>
+<div class="chips" id="genres"></div>
+<div class="section-head"><h2 id="listTitle">Artists to know</h2><small>Tap to explore</small></div>
+<div class="grid" id="artists"></div>
+<section class="detail" id="detail"><button class="back" id="back">← All artists</button><div id="detailContent"></div></section>
+<section class="quiz"><div class="eyebrow">QUICK CHALLENGE</div><h2>Music brain check 🎧</h2><p id="question">Which artist is known as the “Queen of Pop”?</p><div class="answers" id="answers"></div><div id="quizFeedback" aria-live="polite"></div><button class="chip" id="nextQuiz" style="margin-top:8px">Next question ↗</button></section>
+</main>
+<footer>seeyuh · Made for music lovers<br>Artist facts are for discovery; explore the music on your favourite streaming platform.</footer>
+<script>
+const artists=[
+{name:"Burna Boy",genre:"Afrobeats",origin:"Nigeria",style:"Afrofusion with dancehall, reggae and hip-hop influences.",known:"Global hits and a sound that blends African rhythms with international styles.",songs:["Last Last","On the Low","Ye"],emoji:"🔥",colors:["#b54b31","#4c1d4b"]},
+{name:"Wizkid",genre:"Afrobeats",origin:"Nigeria",style:"Smooth Afrobeats, pop and R&B.",known:"A major voice in taking contemporary Afrobeats to global audiences.",songs:["Essence","Ojuelegba","Joro"],emoji:"🌅",colors:["#d57b34","#63324d"]},
+{name:"Tems",genre:"R&B",origin:"Nigeria",style:"Soulful alternative R&B with rich, expressive vocals.",known:"Her distinctive voice and atmospheric songwriting.",songs:["Free Mind","Me & U","Higher"],emoji:"🌙",colors:["#6251a6","#25284f"]},
+{name:"Sauti Sol",genre:"Afropop",origin:"Kenya",style:"Harmonies, guitar-led Afropop and Kenyan influences.",known:"Polished vocal harmonies and songs celebrating love and life.",songs:["Suzanna","Melanin","Sura Yako"],emoji:"🇰🇪",colors:["#31856b","#183d54"]},
+{name:"Diamond Platnumz",genre:"Bongo Flava",origin:"Tanzania",style:"Bongo Flava, Afropop and dance music.",known:"Catchy melodies, energetic performances and East African hits.",songs:["Jeje","Waah!","Number One"],emoji:"💎",colors:["#b47b28","#643c25"]},
+{name:"Taylor Swift",genre:"Pop",origin:"United States",style:"Story-driven pop, country-pop and synth-pop.",known:"Detailed songwriting and era-spanning albums.",songs:["Anti-Hero","Love Story","Cruel Summer"],emoji:"✨",colors:["#bb6c84","#5b3b72"]},
+{name:"The Weeknd",genre:"R&B",origin:"Canada",style:"Dark, cinematic R&B and synth-pop.",known:"Falsetto vocals and a neon-lit, 1980s-inspired pop sound.",songs:["Blinding Lights","Save Your Tears","The Hills"],emoji:"🌃",colors:["#b52e36","#321a39"]},
+{name:"Drake",genre:"Hip-Hop",origin:"Canada",style:"Melodic rap, hip-hop and R&B.",known:"Mixing introspective lyrics with catchy rap and singing.",songs:["God's Plan","One Dance","Hotline Bling"],emoji:"🦉",colors:["#4c6d91","#232b48"]},
+{name:"Kendrick Lamar",genre:"Hip-Hop",origin:"United States",style:"Lyrical hip-hop with layered storytelling.",known:"Conceptual albums, social commentary and intricate lyricism.",songs:["HUMBLE.","DNA.","Alright"],emoji:"🎙️",colors:["#b36a3c","#3b2c27"]},
+{name:"Beyoncé",genre:"Pop",origin:"United States",style:"Pop, R&B and genre-blending performance music.",known:"Powerful vocals, ambitious visuals and commanding live shows.",songs:["Halo","Crazy in Love","CUFF IT"],emoji:"🐝",colors:["#b18a39","#583b2c"]},
+{name:"Arctic Monkeys",genre:"Rock",origin:"United Kingdom",style:"Indie rock with sharp lyrics and evolving guitar sounds.",known:"Distinctive storytelling and guitar-driven anthems.",songs:["Do I Wanna Know?","505","R U Mine?"],emoji:"🎸",colors:["#4d6f73","#202f42"]},
+{name:"Bob Marley",genre:"Reggae",origin:"Jamaica",style:"Roots reggae with messages of unity and hope.",known:"Songs that helped bring reggae to audiences worldwide.",songs:["Three Little Birds","One Love","Could You Be Loved"],emoji:"🌿",colors:["#478453","#28432c"]},
+{name:"Bad Bunny",genre:"Latin",origin:"Puerto Rico",style:"Latin trap, reggaeton and experimental Latin pop.",known:"Boundary-pushing Spanish-language hits and bold visual style.",songs:["Tití Me Preguntó","MONACO","Me Porto Bonito"],emoji:"🐰",colors:["#bf594f","#4c2d68"]},
+{name:"Eminem",genre:"Hip-Hop",origin:"United States",style:"Technical rap with fast flows and wordplay.",known:"Complex rhyme schemes and provocative storytelling.",songs:["Lose Yourself","Without Me","Stan"],emoji:"🎤",colors:["#a4a7ac","#3a3c47"]},
+{name:"Adele",genre:"Soul",origin:"United Kingdom",style:"Soul and pop ballads with powerhouse vocals.",known:"Emotive songwriting and a signature vocal delivery.",songs:["Hello","Easy on Me","Rolling in the Deep"],emoji:"🎹",colors:["#8e6a4e","#392d3c"]},
+{name:"Daft Punk",genre:"Electronic",origin:"France",style:"French house, electronic and disco-inspired music.",known:"Robotic personas and influential dance production.",songs:["One More Time","Get Lucky","Harder, Better, Faster, Stronger"],emoji:"🤖",colors:["#4e85ad","#35255e"]}
+];
+const genreList=["All","Afrobeats","Afropop","Bongo Flava","R&B","Pop","Hip-Hop","Rock","Reggae","Latin","Soul","Electronic"];
+let selected="All", query="", activeArtist=null;
+const genresEl=document.getElementById("genres"), artistsEl=document.getElementById("artists");
+function renderGenres(){genresEl.innerHTML=genreList.map(g=>`<button class="chip ${g===selected?'active':''}" data-genre="${g}">${g}</button>`).join("");genresEl.querySelectorAll("button").forEach(b=>b.onclick=()=>{selected=b.dataset.genre;renderGenres();renderArtists()})}
+function renderArtists(){let list=artists.filter(a=>(selected==="All"||a.genre===selected)&&(`${a.name} ${a.genre} ${a.origin}`.toLowerCase().includes(query)));document.getElementById("count").textContent=`${list.length} artist${list.length===1?'':'s'}`;document.getElementById("listTitle").textContent=selected==="All"?"Artists to know":selected+" artists";artistsEl.innerHTML=list.length?list.map(a=>`<article class="artist" tabindex="0" data-name="${a.name}"><div class="art" style="background:linear-gradient(135deg,${a.colors[0]},${a.colors[1]})"><b>${a.emoji}</b></div><div class="artist-info"><div class="genre-tag">${a.genre}</div><h3>${a.name}</h3><p>${a.origin}</p></div></article>`).join(""):`<div class="empty">No artists found. Try another search or genre.</div>`;artistsEl.querySelectorAll(".artist").forEach(card=>{card.onclick=()=>showArtist(card.dataset.name);card.onkeydown=e=>{if(e.key==="Enter")showArtist(card.dataset.name)}})}
+function showArtist(name){const a=artists.find(x=>x.name===name);if(!a)return;activeArtist=a;document.getElementById("detailContent").innerHTML=`<div class="detail-top" style="margin-top:16px"><div class="detail-art" style="background:linear-gradient(135deg,${a.colors[0]},${a.colors[1]})">${a.emoji}</div><div><div class="genre-tag">${a.genre}</div><h2>${a.name}</h2><div style="color:var(--muted)">${a.origin}</div></div></div><p>${a.style}</p><p>${a.known}</p><strong>Start with these tracks</strong>${a.songs.map((s,i)=>`<div class="track">${["▶","♫","♪"][i]} &nbsp; ${s}</div>`).join("")}<p style="font-size:12px;color:var(--muted)">Track suggestions are for discovery; availability depends on your music service.</p>`;document.getElementById("detail").classList.add("open");document.getElementById("detail").scrollIntoView({behavior:"smooth",block:"start"})}
+document.getElementById("back").onclick=()=>{document.getElementById("detail").classList.remove("open");activeArtist=null};
+document.getElementById("search").addEventListener("input",e=>{query=e.target.value.toLowerCase().trim();renderArtists()});
+const quiz=[{q:"Which artist is known as the “Queen of Pop”?",a:["Beyoncé","Madonna","Adele","Tems"],correct:"Madonna",why:"Madonna is widely known by the title “Queen of Pop”."},{q:"Which genre is Bob Marley most associated with?",a:["Reggae","House","Country","Grunge"],correct:"Reggae",why:"Bob Marley became one of reggae's most influential global artists."},{q:"Which country is Burna Boy from?",a:["Ghana","Nigeria","Kenya","South Africa"],correct:"Nigeria",why:"Burna Boy is a Nigerian singer known for Afrofusion."},{q:"Which group released “Get Lucky”?",a:["Coldplay","Daft Punk","Arctic Monkeys","Sauti Sol"],correct:"Daft Punk",why:"Daft Punk released “Get Lucky” featuring Pharrell Williams and Nile Rodgers."},{q:"Which artist is known for the album “DAMN.”?",a:["Drake","Eminem","Kendrick Lamar","The Weeknd"],correct:"Kendrick Lamar",why:"“DAMN.” is an album by Kendrick Lamar."}];
+let qi=0,answered=false;
+function renderQuiz(){answered=false;let q=quiz[qi];document.getElementById("question").textContent=q.q;document.getElementById("quizFeedback").textContent="";document.getElementById("answers").innerHTML=q.a.map(a=>`<button class="answer">${a}</button>`).join("");document.querySelectorAll(".answer").forEach(b=>b.onclick=()=>{if(answered)return;answered=true;let ok=b.textContent===q.correct;document.getElementById("quizFeedback").textContent=(ok?"Correct! ":"Not quite. ")+q.why;document.querySelectorAll(".answer").forEach(x=>{x.disabled=true;if(x.textContent===q.correct)x.style.borderColor="var(--accent)"});})}
+document.getElementById("nextQuiz").onclick=()=>{qi=(qi+1)%quiz.length;renderQuiz()};
+renderGenres();renderArtists();renderQuiz();
+</script>
+</body>
+</html>
